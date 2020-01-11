@@ -12,5 +12,6 @@ COPY setup.py setup.py
 COPY logexp/ logexp/
 
 RUN python setup.py install
+RUN make clean
 
 ENTRYPOINT ["logexp"]

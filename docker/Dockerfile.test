@@ -17,5 +17,6 @@ COPY LICENSE LICENSE
 
 RUN pip install -r dev-requirements.txt
 RUN python setup.py install
+RUN make clean
 
 CMD ["make", "test"]
