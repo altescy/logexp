@@ -10,6 +10,7 @@ WORKDIR /logexp
 
 COPY setup.py setup.py
 COPY logexp/ logexp/
+COPY Makefile Makefile
 
 RUN python setup.py install
 RUN make clean
