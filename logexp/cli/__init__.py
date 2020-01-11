@@ -25,4 +25,3 @@ def main():
         func(args)
     else:
         parser.parse_args(["--help"])
-

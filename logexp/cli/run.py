@@ -7,24 +7,24 @@ from logexp.executor import Executor
 @Subcommand.add(
     name="run",
     description="run worker",
-    help="run worker",
+    help_="run worker",
 )
 class RunCommand(Subcommand):
     def set_arguments(self):
         self.parser.add_argument("-o", "--output", required=True,
-            help="path to output directory")
+                                 help="path to output directory")
         self.parser.add_argument("-m", "--module", required=True,
-            help="module name")
+                                 help="module name")
         self.parser.add_argument("-e", "--experiment", required=True,
-            help="experiment name")
+                                 help="experiment name")
         self.parser.add_argument("-w", "--worker", required=True,
-            help="worker name")
+                                 help="worker name")
         self.parser.add_argument("-n", "--name",
-            help="name this log-entry")
+                                 help="name this log-entry")
         self.parser.add_argument("--note",
-            help="add some note about this log-entry")
+                                 help="add some note about this log-entry")
         self.parser.add_argument("--exec-path",
-            help="execution path", default=".")
+                                 help="execution path", default=".")
 
 
     def run(self, args: argparse.Namespace) -> None:
