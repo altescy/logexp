@@ -1,26 +1,24 @@
+import sys
+import importlib
+
+from logexp.experiment import Experiment
 from logexp.worker import BaseWorker
 from logexp.params import Params
 
 
-class SampleWorker(BaseWorker):
-    def config(self):
-        self.n_iter = 10
-
-    def run(self):
-        for i in range(self.n_iter):
-            print(i)
-
-
 class TestWorker:
     def setup(self):
-        self.worker = SampleWorker("sample_worker")
+        sys.path.append("examples/")
+        importlib.import_module("hello")
+        ex = Experiment.get_experiment("my_experiment")
+        self.worker = ex.get_worker("my_worker")
 
     def test_config(self):
-        assert self.worker.n_iter == 10
-        assert self.worker.params["n_iter"] == 10
+        assert self.worker.message == "hello world"
+        assert self.worker.params["message"] == "hello world"
 
     def test_setup_params(self):
-        params = Params({"n_iter": 20})
+        params = Params({"message": "good morning"})
         self.worker.setup(params=params)
-        assert self.worker.n_iter == 20
-        assert self.worker.params["n_iter"] == 20
+        assert self.worker.message == "good morning"
+        assert self.worker.params["message"] == "good morning"
