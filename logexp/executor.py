@@ -125,6 +125,11 @@ class Executor:
 
         self._store.save_run(experiment_id, runinfo)
 
+        worker.setup(
+            storage=runinfo.storage,
+            params=params,
+        )
+
         try:
             with capture() as captured_out:
                 worker.run()
