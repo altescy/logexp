@@ -62,6 +62,6 @@ class Experiment:
         return expeirment_dict
 
     @classmethod
-    def from_json(self, experiment_dict: tp.Dict[str, tp.Any]) -> Experiment:
+    def from_json(cls, experiment_dict: tp.Dict[str, tp.Any]) -> Experiment:
         name = experiment_dict["name"]
         return Experiment.get_experiment(name)

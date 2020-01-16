@@ -6,7 +6,6 @@ import importlib
 import json
 import os
 import sys
-import uuid
 from pathlib import Path
 
 from logexp.utils.capture import capture
