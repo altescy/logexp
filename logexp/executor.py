@@ -30,7 +30,7 @@ class Executor:
     ) -> None:
         self._store = LogStore(Path(rootdir))
         self._module = module
-        self._execution_path = Path(execution_path or os.getcwd())
+        self._execution_path = Path(execution_path or os.getcwd()).absolute()
 
         if execution_path is not None:
             sys.path.append(execution_path)
@@ -135,16 +135,17 @@ class Executor:
                 worker.run()
         except KeyboardInterrupt:
             runinfo.status = Status.INTERRUPTED
-        except Exception: # pylint: disable=broad-except
+        except Exception as e: # pylint: disable=broad-except
             runinfo.status = Status.FAILED
+            raise e
         else:
             runinfo.status = Status.FINISHED
+        finally:
+            runinfo.stdout = captured_out["stdout"]
+            runinfo.stderr = captured_out["stderr"]
 
-        runinfo.stdout = captured_out["stdout"]
-        runinfo.stderr = captured_out["stderr"]
+            runinfo.end_time = datetime.datetime.now()
 
-        runinfo.end_time = datetime.datetime.now()
-
-        self._store.save_run(experiment_id, runinfo)
+            self._store.save_run(experiment_id, runinfo)
 
         return runinfo
