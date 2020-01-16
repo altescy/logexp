@@ -136,15 +136,17 @@ class LogStore:
             for key in [
                 "version", "uuid", "name", "module", "execution_path",
                 "experiment_name", "worker_name", "status",
-                "params", "storage", "start_time", "end_time",
+                "storage", "start_time", "end_time",
             ]
         }
         with open(run_path / self._META_FILE, "w") as f:
             json.dump(meta_dict, f)
 
-        params_dict = runinfo_dict["params"]
-        with open(run_path / self._PARAMS_FILE, "w") as f:
-            json.dump(params_dict, f)
+        params_path = run_path / self._PARAMS_FILE
+        if not params_path.exists():
+            params_dict = runinfo_dict["params"]
+            with open(params_path, "w") as f:
+                json.dump(params_dict, f)
 
         stdout = runinfo_dict["stdout"]
         if stdout is not None:
@@ -161,14 +163,16 @@ class LogStore:
             with open(run_path / self._NOTE_FILE, "w") as f:
                 f.write(note)
 
-        platform_dict = runinfo_dict["platform"]
-        with open(run_path / self._PLATFORM_FILE, "w") as f:
-            json.dump(platform_dict, f)
+        platform_path = run_path / self._PLATFORM_FILE
+        if not platform_path.exists():
+            platform_dict = runinfo_dict["platform"]
+            with open(platform_path, "w") as f:
+                json.dump(platform_dict, f)
 
-        if runinfo.git is not None:
-            git_dict = runinfo_dict["git"]
-            git_path = run_path / self._GIT_DIR
+        git_path = run_path / self._GIT_DIR
+        if runinfo.git is not None and not git_path.exists():
             git_path.mkdir()
+            git_dict = runinfo_dict["git"]
 
             git_version = git_dict["version"]
             with open(git_path / self._GIT_VERSION_FILE, "w") as f:

@@ -1,8 +1,10 @@
 import argparse
 import glob
 import tempfile
+from pathlib import Path
 
 from logexp.cli import Subcommand
+from logexp.executor import Executor
 
 
 class TestRunCommand:
@@ -14,19 +16,25 @@ class TestRunCommand:
             subcommand.setup(self.subparsers)
 
     def test_runcommand(self):
+        module = "hello"
+        execution_path = "./example"
+        experiment_name = "my_experiment"
+        worker_name = "my_worker"
+
         with tempfile.TemporaryDirectory() as tempdir:
+            rootdir = Path(tempdir)
+
+            executor = Executor(
+                rootdir=rootdir,
+                module=module,
+                execution_path=execution_path,
+            )
+            experiment_id = executor.init(experiment_name)
+
             args = self.parser.parse_args([
-                "run", "-o", tempdir, "-m" , "hello",
-                "-e", "my_experiment", "-w", "my_worker",
-                "--exec-path", "examples/"
+                "run", "-s", tempdir, "-m", module,
+                "-e", str(experiment_id), "-w", worker_name,
+                "--exec-path", execution_path,
             ])
 
             args.func(args)
-
-            print(glob.glob(f"{tempdir}/**"))
-            logdir = glob.glob(f"{tempdir}/*")[0]
-
-            with open(f"{logdir}/storage/hello.txt") as f:
-                text = f.read()
-
-            assert text == "hello world"
