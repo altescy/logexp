@@ -187,8 +187,9 @@ class LogStore:
                 f.write(git_state)
 
             git_diff = git_dict["diff"]
-            with open(git_path / self._GIT_DIFF_FILE, "w") as f:
-                f.write(git_diff)
+            if git_diff:
+                with open(git_path / self._GIT_DIFF_FILE, "w") as f:
+                    f.write(git_diff)
 
     def load_run(self, experiment_id: int, run_id: str) -> RunInfo:
         self._check_experiment_exists(experiment_id)
