@@ -3,7 +3,6 @@ import typing as tp
 
 import contextlib
 
-from logexp.metrics import Metrics
 from logexp.params import Params
 from logexp.storage import Storage
 
@@ -16,7 +15,6 @@ class BaseWorker:
         self.__init_done = True
 
         self._storage: tp.Optional[Storage] = None
-        self._metrics: Metrics = Metrics()
 
         self._params = Params()
 
@@ -72,10 +70,6 @@ class BaseWorker:
         if self._storage is None:
             raise RuntimeError("storage is not set")
         return self._storage
-
-    @property
-    def metrics(self) -> Metrics:
-        return self._metrics
 
     def config(self):
         """define worker parameters"""
