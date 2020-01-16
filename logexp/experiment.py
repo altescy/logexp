@@ -54,3 +54,14 @@ class Experiment:
     @property
     def name(self) -> str:
         return self._name
+
+    def to_json(self) -> tp.Dict[str, tp.Any]:
+        expeirment_dict = {
+            "name": self.name
+        }
+        return expeirment_dict
+
+    @classmethod
+    def from_json(self, experiment_dict: tp.Dict[str, tp.Any]) -> Experiment:
+        name = experiment_dict["name"]
+        return Experiment.get_experiment(name)
