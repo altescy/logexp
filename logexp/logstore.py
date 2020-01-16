@@ -244,8 +244,12 @@ class LogStore:
             with open(git_path / self._GIT_STATE_FILE, "r") as f:
                 git_dict["state"] = f.read()
 
-            with open(git_path / self._GIT_DIFF_FILE, "r") as f:
-                git_dict["diff"] = f.read()
+            git_diff_path = git_path / self._GIT_DIFF_FILE
+            if git_diff_path.exists():
+                with open(git_diff_path, "r") as f:
+                    git_dict["diff"] = f.read()
+            else:
+                git_dict["diff"] = None
 
         runinfo_dict = {
             "version": meta_dict["version"],
