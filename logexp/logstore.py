@@ -7,7 +7,7 @@ import uuid
 from pathlib import Path
 
 from logexp.experiment import Experiment
-from logexp.runinfo import RunInfo
+from logexp.metadata.runinfo import RunInfo
 from logexp.storage import Storage
 
 

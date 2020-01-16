@@ -5,10 +5,10 @@ import dataclasses
 import datetime
 from pathlib import Path
 
-from logexp.git import GitInfo
+from logexp.metadata.git import GitInfo
 from logexp.params import Params
-from logexp.platform import PlatformInfo
-from logexp.status import Status
+from logexp.metadata.platform import PlatformInfo
+from logexp.metadata.status import Status
 from logexp.storage import Storage
 
 

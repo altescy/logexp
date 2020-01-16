@@ -5,7 +5,7 @@ import tempfile
 
 from logexp.executor import Executor
 from logexp.experiment import Experiment
-from logexp.status import Status
+from logexp.metadata.status import Status
 from logexp.worker import BaseWorker
 
 

@@ -6,12 +6,12 @@ import uuid
 from pathlib import Path
 
 from logexp.experiment import Experiment
-from logexp.git import get_git_info
+from logexp.metadata.git import get_git_info
 from logexp.logstore import LogStore
 from logexp.params import Params
-from logexp.platform import get_platform_info
-from logexp.status import Status
-from logexp.runinfo import RunInfo
+from logexp.metadata.platform import get_platform_info
+from logexp.metadata.status import Status
+from logexp.metadata.runinfo import RunInfo
 from logexp.version import VERSION
 
 
