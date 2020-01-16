@@ -18,6 +18,10 @@ class GitInfo:
     def to_json(self) -> tp.Dict[str, tp.Any]:
         return dataclasses.asdict(self)
 
+    @classmethod
+    def from_json(cls, git_dict: tp.Dict[str, tp.Any]) -> GitInfo:
+        return GitInfo(**git_dict)
+
 
 def _check_git_command() -> None:
     try:

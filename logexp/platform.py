@@ -18,6 +18,10 @@ class PlatformInfo:
     def to_json(self) -> tp.Dict[str, tp.Any]:
         return dataclasses.asdict(self)
 
+    @classmethod
+    def from_json(cls, platform_dict: tp.Dict[str, tp.Any]) -> PlatformInfo:
+        return PlatformInfo(**platform_dict)
+
 
 def get_platform_info() -> PlatformInfo:
     info = PlatformInfo(system=platform.system(),
