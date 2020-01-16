@@ -7,67 +7,56 @@ import json
 import os
 import sys
 import uuid
+from pathlib import Path
 
-from logexp.capture import capture
+from logexp.utils.capture import capture
 from logexp import error
 from logexp.experiment import Experiment
-from logexp.git import GitInfo, get_git_info
-from logexp.logentry import LogEntry
-from logexp.platform import get_platform_info
-from logexp.status import Status
-from logexp.storage import Storage
+from logexp.logstore import LogStore
+from logexp.metadata.git import GitInfo, get_git_info
+from logexp.metadata.runinfo import RunInfo
+from logexp.metadata.platform import get_platform_info
+from logexp.metadata.status import Status
+from logexp.params import Params
+from logexp.version import VERSION
 from logexp.worker import BaseWorker
 
 
 class Executor:
-    _ENTRY_FILENAME = "info.json"
-    _STORAGE_DIRNAME = "storage"
-
     def __init__(
             self,
-            base_path: str,
+            rootdir: tp.Union[Path, str],
             module: str,
-            experiment_name: str,
-            worker_name: str,
-            execution_path: str = ".",
+            execution_path: str = None,
     ) -> None:
-        sys.path.append(execution_path)
+        self._store = LogStore(Path(rootdir))
+        self._module = module
+        self._execution_path = Path(execution_path or os.getcwd())
+
+        if execution_path is not None:
+            sys.path.append(execution_path)
         importlib.import_module(module)
 
-        self._base_path = base_path
-        self._module = module
-        self._experiment = Experiment.get_experiment(experiment_name)
-        self._worker = self._experiment.get_worker(worker_name)
-
     @staticmethod
-    def _get_default_runname(
+    def _load_params(path: str):
+        with open(path, "r") as f:
+            params_dict = json.load(f)
+        return Params.from_json(params_dict)
+
+    def _build_runinfo(
+            self,
+            experiment_id: int,
             experiment: Experiment,
-            worker: BaseWorker
-    ) -> str:
-        date = datetime.datetime.now().strftime("%Y%m%d")
-        name = f"{experiment.name}_{worker.name}_{date}"
-        return name
-
-    @staticmethod
-    def _get_uuid() -> str:
-        return uuid.uuid4().hex
-
-    @staticmethod
-    def _save_entry(path: str, entry: LogEntry) -> None:
-        with open(path, "w") as f:
-            json.dump(entry.to_json(), f)
-
-    def load(self, oneuuid: str) -> None:
-        """load specified run and set params"""
-
-    def run(self, name: str = None, note: str = None) -> str:
-        if name is None:
-            name = self._get_default_runname(self._experiment, self._worker)
-
-        oneuuid = self._get_uuid()
-        working_path = os.path.join(self._base_path, oneuuid)
-        entry_path = os.path.join(working_path, self._ENTRY_FILENAME)
-        storage_path = os.path.join(working_path, self._STORAGE_DIRNAME)
+            worker: BaseWorker,
+            run_id: str,
+            name: str,
+            status: Status,
+            params: Params,
+            note: str = None,
+            stdout: str = None,
+            stderr: str = None,
+    ) -> RunInfo:
+        storage = self._store.get_storage(experiment_id, run_id)
 
         gitinfo: tp.Optional[GitInfo] = None
         try:
@@ -76,45 +65,82 @@ class Executor:
                 error.GitRepositoryNotFoundError):
             gitinfo = None
 
-        os.mkdir(working_path)
-        os.mkdir(storage_path)
-
-        storage = Storage(storage_path)
-        self._worker.setup(storage=storage)
-
-        entry = LogEntry(
-            uuid=oneuuid,
+        runinfo = RunInfo(
+            version=VERSION,
+            uuid=run_id,
             name=name,
             module=self._module,
-            experiment_name=self._experiment.name,
-            worker_name=self._worker.name,
-            status=Status.RUNNING,
-            params=self._worker.params,
-            storage=self._worker.storage,
+            execution_path=self._execution_path,
+            experiment_name=experiment.name,
+            worker_name=worker.name,
+            status=status,
+            params=params,
+            storage=storage,
             platform=get_platform_info(),
             git=gitinfo,
             note=note,
-            stdout=None,
-            stderr=None,
-            created_at=datetime.datetime.now(),
-            updated_at=datetime.datetime.now(),
+            stdout=stdout,
+            stderr=stderr,
+            start_time=datetime.datetime.now(),
+            end_time=datetime.datetime.now(),
         )
 
-        self._save_entry(entry_path, entry)
+        return runinfo
+
+    def init(
+            self,
+            experiment_name: str,
+    ) -> int:
+        experiment = Experiment.get_experiment(experiment_name)
+        experiment_id = self._store.create_experiment(experiment)
+        return experiment_id
+
+    def run(
+            self,
+            experiment_id: int,
+            worker_name: str,
+            params_path: str = None,
+            name: str = None,
+            note: str = None,
+    ) -> RunInfo:
+        name = name or ""
+        run_id = self._store.create_run(experiment_id, worker_name)
+
+        experiment = self._store.get_experiment(experiment_id)
+        worker = experiment.get_worker(worker_name)
+        params = (
+            self._load_params(params_path)
+            if params_path else worker.params
+        )
+
+        runinfo = self._build_runinfo(
+            experiment_id=experiment_id,
+            experiment=experiment,
+            worker=worker,
+            run_id=run_id,
+            name=name,
+            status=Status.RUNNING,
+            params=params,
+            note=note,
+        )
+
+        self._store.save_run(experiment_id, runinfo)
 
         try:
             with capture() as captured_out:
-                self._worker.run()
+                worker.run()
         except KeyboardInterrupt:
-            entry.status = Status.INTERRUPTED
+            runinfo.status = Status.INTERRUPTED
         except Exception: # pylint: disable=broad-except
-            entry.status = Status.FAILED
+            runinfo.status = Status.FAILED
         else:
-            entry.status = Status.FINISHED
+            runinfo.status = Status.FINISHED
 
-        entry.stdout = captured_out["stdout"]
-        entry.stderr = captured_out["stderr"]
+        runinfo.stdout = captured_out["stdout"]
+        runinfo.stderr = captured_out["stderr"]
 
-        self._save_entry(entry_path, entry)
+        runinfo.end_time = datetime.datetime.now()
 
-        return oneuuid
+        self._store.save_run(experiment_id, runinfo)
+
+        return runinfo
