@@ -7,6 +7,7 @@ from pathlib import Path
 from logexp.cli.subcommand import Subcommand
 from logexp.experiment import Experiment
 from logexp.logstore import LogStore
+from logexp.settings import DEFAULT_LOGSTORE_DIR
 
 
 @Subcommand.add(
@@ -27,10 +28,10 @@ class RunCommand(Subcommand):
                                   help="execution path", default=".")
 
         run_group = self.parser.add_argument_group("params from run")
-        run_group.add_argument("-s", "--store",
-                               help="path to logstore directory")
         run_group.add_argument("-r", "--run",
                                help="run id")
+        run_group.add_argument("-s", "--store", default=DEFAULT_LOGSTORE_DIR,
+                               help="path to logstore directory")
 
     @staticmethod
     def _check_args(args: argparse.Namespace) -> None:

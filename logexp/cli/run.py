@@ -3,6 +3,7 @@ import pprint
 
 from logexp.cli.subcommand import Subcommand
 from logexp.executor import Executor
+from logexp.settings import DEFAULT_LOGSTORE_DIR
 
 
 @Subcommand.add(
@@ -12,8 +13,7 @@ from logexp.executor import Executor
 )
 class RunCommand(Subcommand):
     def set_arguments(self):
-        self.parser.add_argument("-s", "--store", required=True,
-                                 help="path to logstore directory")
+
         self.parser.add_argument("-m", "--module", required=True,
                                  help="module name")
         self.parser.add_argument("-e", "--experiment", required=True,
@@ -28,6 +28,8 @@ class RunCommand(Subcommand):
                                  help="add some note about this run")
         self.parser.add_argument("--exec-path",
                                  help="execution path", default=".")
+        self.parser.add_argument("-s", "--store", default=DEFAULT_LOGSTORE_DIR,
+                                 help="path to logstore directory")
 
 
     def run(self, args: argparse.Namespace) -> None:
