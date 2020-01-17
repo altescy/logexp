@@ -1,5 +1,4 @@
 import argparse
-import pprint
 
 from logexp.cli.subcommand import Subcommand
 from logexp.executor import Executor
