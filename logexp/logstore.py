@@ -293,9 +293,8 @@ class LogStore:
         runs: tp.List[RunInfo] = []
         run_paths = self._rootdir.glob(f"{experiment_id_str}/{worker_name}/*")
         for run_path in run_paths:
-            experiment_id_ = int(run_path.parts[0])
             run_id_ = run_path.parts[2]
-            run_info = self.load_run(experiment_id_, run_id_)
+            run_info = self.load_run(run_id_)
             runs.append(run_info)
 
         return runs
