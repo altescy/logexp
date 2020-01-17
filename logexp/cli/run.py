@@ -3,7 +3,35 @@ import pprint
 
 from logexp.cli.subcommand import Subcommand
 from logexp.executor import Executor
+from logexp.metadata.runinfo import RunInfo
 from logexp.settings import DEFAULT_LOGSTORE_DIR
+
+
+_RUNINFO_SUMMARY_TEMPLATE = """** SUMMARY **
+  run_id     : {run_id}
+  name       : {name}
+  module     : {module}
+  experiment : {experiment}
+  worker     : {worker}
+  status     : {status}
+  artifacts  : {artifacts}
+  start_time : {start_time}
+  end_time   : {end_time}"""
+
+
+def _print_summary(runinfo: RunInfo) -> None:
+    summary = _RUNINFO_SUMMARY_TEMPLATE.format(
+        run_id=runinfo.uuid,
+        name=runinfo.name,
+        module=runinfo.module,
+        experiment=runinfo.experiment_name,
+        worker=runinfo.worker_name,
+        status=runinfo.status.value,
+        artifacts=runinfo.storage.to_json(),
+        start_time=runinfo.start_time,
+        end_time=runinfo.end_time,
+    )
+    print(summary)
 
 
 @Subcommand.add(
@@ -31,7 +59,6 @@ class RunCommand(Subcommand):
         self.parser.add_argument("-s", "--store", default=DEFAULT_LOGSTORE_DIR,
                                  help="path to logstore directory")
 
-
     def run(self, args: argparse.Namespace) -> None:
         executor = Executor(
             rootdir=args.store,
@@ -45,4 +72,4 @@ class RunCommand(Subcommand):
             name=args.name,
             note=args.note,
         )
-        pprint.pprint(run_info.to_json())
+        _print_summary(run_info)
