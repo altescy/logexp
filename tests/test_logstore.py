@@ -66,7 +66,7 @@ class TestLogStore:
 
             store.save_run(experiment_id, run_info)
 
-            run_info_ = store.load_run(experiment_id, run_id)
+            run_info_ = store.load_run(run_id)
 
             assert run_info_.uuid == run_id
             assert run_info_.stdout == "test stdout"

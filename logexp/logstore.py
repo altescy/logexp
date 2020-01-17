@@ -191,14 +191,12 @@ class LogStore:
                 with open(git_path / self._GIT_DIFF_FILE, "w") as f:
                     f.write(git_diff)
 
-    def load_run(self, experiment_id: int, run_id: str) -> RunInfo:
-        self._check_experiment_exists(experiment_id)
-
-        experiment_path = self._get_experiment_path(experiment_id)
-
-        run_paths = list(experiment_path.glob(f"*/{run_id}"))
+    def load_run(self, run_id: str) -> RunInfo:
+        run_paths = list(self._rootdir.glob(f"*/*/{run_id}"))
         if not run_paths:
             raise FileNotFoundError(f"run not found: {run_id}")
+        if len(run_paths) > 1:
+            raise RuntimeError("duplicate run_id")
 
         run_path = run_paths[0]
 
