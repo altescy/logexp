@@ -19,7 +19,7 @@ class RunCommand(Subcommand):
         module_group = self.parser.add_argument_group("params from module")
         module_group.add_argument("-m", "--module",
                                   help="module name")
-        module_group.add_argument("-e", "--experiment", required=True,
+        module_group.add_argument("-e", "--experiment",
                                   help="experiment name")
         module_group.add_argument("-w", "--worker",
                                   help="worker name")
