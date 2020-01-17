@@ -39,4 +39,10 @@ docker-build:
 	$(DOCKER) build -f $(DOCKERFILE) -t $(DOCKER_IMAGE) $(PWD)
 
 docker-run:
-	$(DOCKER) run -it --rm --name $(DOCKER_CONTAINER) $(DOCKER_IMAGE)
+	$(DOCKER) run -it -v $(PWD):/work --name $(DOCKER_CONTAINER) $(DOCKER_IMAGE)
+
+docker-attach:
+	$(DOCKER) attach $(DOCKER_CONTAINER)
+
+docker-rm:
+	$(DOCKER) rm $(DOCKER_CONTAINER)
