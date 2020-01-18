@@ -30,6 +30,7 @@ class RunInfo:
     name: str
     module: str
     execution_path: Path
+    experiment_id: int
     experiment_name: str
     worker_name: str
     status: Status
@@ -50,6 +51,7 @@ class RunInfo:
             "name": self.name,
             "module": self.module,
             "execution_path": str(self.execution_path),
+            "experiment_id": self.experiment_id,
             "experiment_name": self.experiment_name,
             "worker_name": self.worker_name,
             "status": self.status.value,
@@ -77,6 +79,7 @@ class RunInfo:
             name=info_dict["name"],
             module=info_dict["module"],
             execution_path=Path(info_dict["execution_path"]),
+            experiment_id=info_dict["experiment_id"],
             experiment_name=info_dict["experiment_name"],
             worker_name=info_dict["worker_name"],
             status=Status(info_dict["status"]),

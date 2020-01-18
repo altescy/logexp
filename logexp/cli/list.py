@@ -11,9 +11,11 @@ from logexp.utils.table import Table
 
 
 def _get_runinfo_table(runinfos: tp.List[RunInfo], max_column_width: int) -> Table:
-    columns = ["run_id", "name", "experiment", "worker", "status", "start_time", "end_time", "note"]
+    columns = ["run_id", "name", "exp_id", "exp_name", "worker",
+               "status", "start_time", "end_time", "note"]
     runinfo_dicts = [
-        {"run_id": x.uuid, "name": x.name, "experiment": x.experiment_name,
+        {"run_id": x.uuid, "name": x.name,
+         "exp_id": x.experiment_id, "exp_name": x.experiment_name,
          "worker": x.worker_name, "status": x.status.value,
          "start_time": x.start_time.strftime("%Y-%m-%d %H:%M:%S"),
          "end_time": x.end_time.strftime("%Y-%m-%d %H:%M:%S"),

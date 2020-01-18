@@ -70,6 +70,7 @@ class Executor:
             name=name,
             module=self._module,
             execution_path=self._execution_path,
+            experiment_id=experiment_id,
             experiment_name=experiment.name,
             worker_name=worker.name,
             status=status,

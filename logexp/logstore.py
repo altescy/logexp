@@ -135,7 +135,7 @@ class LogStore:
             key: runinfo_dict[key]
             for key in [
                 "version", "uuid", "name", "module", "execution_path",
-                "experiment_name", "worker_name", "status",
+                "experiment_id", "experiment_name", "worker_name", "status",
                 "storage", "start_time", "end_time",
             ]
         }
@@ -255,6 +255,7 @@ class LogStore:
             "name": meta_dict["name"],
             "module": meta_dict["module"],
             "execution_path": meta_dict["execution_path"],
+            "experiment_id": meta_dict["experiment_id"],
             "experiment_name": meta_dict["experiment_name"],
             "worker_name": meta_dict["worker_name"],
             "status": meta_dict["status"],
