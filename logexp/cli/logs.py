@@ -1,14 +1,10 @@
-import typing as tp
-
 import argparse
 import json
 from pathlib import Path
 
 from logexp.cli.subcommand import Subcommand
 from logexp.logstore import LogStore
-from logexp.metadata.runinfo import RunInfo
 from logexp.settings import DEFAULT_LOGSTORE_DIR
-from logexp.utils.table import Table
 
 
 @Subcommand.add(
