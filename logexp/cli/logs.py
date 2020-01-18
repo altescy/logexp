@@ -28,7 +28,7 @@ class LogsCommand(Subcommand):
         if args.config_file is not None:
             settings.load(args.config_file)
 
-        store_path = args.store or settings.logstore_storepath()
+        store_path = args.store or settings.logstore_storepath
 
         store = LogStore(store_path)
         runinfos = store.get_runs(args.experiment, args.worker)

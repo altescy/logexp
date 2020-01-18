@@ -25,7 +25,7 @@ class RunCommand(Subcommand):
         module_group.add_argument("-w", "--worker",
                                   help="worker name")
         module_group.add_argument("--exec-path", type=Path,
-                                  help="execution path" )
+                                  help="execution path")
 
         run_group = self.parser.add_argument_group("params from run")
         run_group.add_argument("-r", "--run",
