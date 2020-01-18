@@ -79,7 +79,7 @@ class RunInfo:
             name=info_dict["name"],
             module=info_dict["module"],
             execution_path=Path(info_dict["execution_path"]),
-            experiment_id=info_dict["experiment_id"],
+            experiment_id=int(info_dict["experiment_id"]),
             experiment_name=info_dict["experiment_name"],
             worker_name=info_dict["worker_name"],
             status=Status(info_dict["status"]),
