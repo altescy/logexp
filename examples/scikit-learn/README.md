@@ -13,7 +13,7 @@ experiment id: 0
 ### 2. edit params
 
 ```
-$ logexp params -e sklearn-iris -w train-svc > paramsjson
+$ logexp params -e sklearn-iris -w train-svc > params.json
 $ cat params.json  # edit params.json if you need
 {
   "svc_params": {
