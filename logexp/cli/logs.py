@@ -12,7 +12,7 @@ from logexp.settings import DEFAULT_LOGSTORE_DIR
     description="dump logs in json format",
     help_="dump logs in json format",
 )
-class ListCommand(Subcommand):
+class LogsCommand(Subcommand):
     def set_arguments(self):
         self.parser.add_argument("-e", "--experiment", type=int,
                                  help="experiment id")
