@@ -3,7 +3,7 @@ import argparse
 from logexp.version import VERSION
 from logexp.cli.subcommand import Subcommand
 from logexp.cli import (
-    run, init, params, list as list_cmd
+    run, init, params, list as list_cmd, logs
 )
 
 
