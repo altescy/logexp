@@ -1,13 +1,16 @@
 import argparse
+import json
 from pathlib import Path
 
 from logexp.cli.subcommand import Subcommand
 from logexp.executor import Executor
 from logexp.metadata.runinfo import RunInfo
+from logexp.report import Report
 from logexp.settings import Settings
 
 
-_RUNINFO_SUMMARY_TEMPLATE = """** SUMMARY **
+_RUNINFO_SUMMARY_TEMPLATE = """
+** SUMMARY **
   run_id     : {run_id}
   name       : {name}
   module     : {module}
@@ -16,7 +19,13 @@ _RUNINFO_SUMMARY_TEMPLATE = """** SUMMARY **
   status     : {status}
   artifacts  : {artifacts}
   start_time : {start_time}
-  end_time   : {end_time}"""
+  end_time   : {end_time}
+"""
+
+_REPORT_TEMPLATE = """
+** WORKER REPORT **
+{report}
+"""
 
 
 def _print_summary(runinfo: RunInfo) -> None:
@@ -33,6 +42,12 @@ def _print_summary(runinfo: RunInfo) -> None:
     )
     print(summary)
 
+
+def _print_report(report: Report) -> None:
+    report_dict = report.to_json()
+    report_json = json.dumps(report_dict, indent=2)
+    report_str = _REPORT_TEMPLATE.format(report=report_json)
+    print(report_str)
 
 @Subcommand.add(
     name="run",
@@ -84,4 +99,8 @@ class RunCommand(Subcommand):
             name=args.name,
             note=args.note,
         )
+
+        if run_info.report is not None:
+            _print_report(run_info.report)
+
         _print_summary(run_info)

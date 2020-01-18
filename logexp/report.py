@@ -4,10 +4,10 @@ import typing as tp
 from logexp.utils.jsondict import JsonDict
 
 
-class Params(JsonDict):
+class Report(JsonDict):
     """parameter dict"""
 
     @classmethod
-    def from_json(cls, params_dict: tp.Dict[str, tp.Any]) -> Params:
+    def from_json(cls, params_dict: tp.Dict[str, tp.Any]) -> Report:
         # pylint: disable=arguments-differ
-        return Params(params_dict)
+        return Report(params_dict)

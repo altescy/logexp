@@ -11,3 +11,7 @@ class MyWorker(logexp.BaseWorker):
     def run(self):
         with self.storage.open("hello.txt", "w") as f:
             f.write(self.message)
+
+        report = logexp.Report()
+        report["foo"] = "bar"
+        return report

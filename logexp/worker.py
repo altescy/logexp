@@ -4,6 +4,7 @@ import typing as tp
 import contextlib
 
 from logexp.params import Params
+from logexp.report import Report
 from logexp.storage import Storage
 
 
@@ -74,5 +75,5 @@ class BaseWorker:
     def config(self):
         """define worker parameters"""
 
-    def run(self) -> None:
+    def run(self) -> tp.Optional[Report]:
         raise NotImplementedError

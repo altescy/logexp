@@ -16,6 +16,7 @@ from logexp.metadata.runinfo import RunInfo
 from logexp.metadata.platform import get_platform_info
 from logexp.metadata.status import Status
 from logexp.params import Params
+from logexp.report import Report
 from logexp.version import VERSION
 from logexp.worker import BaseWorker
 
@@ -50,6 +51,7 @@ class Executor:
             name: str,
             status: Status,
             params: Params,
+            report: Report = None,
             note: str = None,
             stdout: str = None,
             stderr: str = None,
@@ -74,6 +76,7 @@ class Executor:
             worker_name=worker.name,
             status=status,
             params=params,
+            report=report,
             storage=storage,
             platform=get_platform_info(),
             git=gitinfo,
@@ -132,7 +135,7 @@ class Executor:
 
         try:
             with capture() as captured_out:
-                worker.run()
+                report = worker.run()
         except KeyboardInterrupt:
             runinfo.status = Status.INTERRUPTED
         except Exception as e: # pylint: disable=broad-except
@@ -141,6 +144,7 @@ class Executor:
         else:
             runinfo.status = Status.FINISHED
         finally:
+            runinfo.report = report
             runinfo.stdout = captured_out["stdout"]
             runinfo.stderr = captured_out["stderr"]
 

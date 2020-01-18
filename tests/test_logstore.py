@@ -9,6 +9,7 @@ from logexp.experiment import Experiment
 from logexp.metadata.git import get_git_info
 from logexp.logstore import LogStore
 from logexp.params import Params
+from logexp.report import Report
 from logexp.metadata.platform import get_platform_info
 from logexp.metadata.status import Status
 from logexp.metadata.runinfo import RunInfo
@@ -55,6 +56,7 @@ class TestLogStore:
                 worker_name=self.worker_name,
                 status=Status.FINISHED,
                 params=Params({"test": "params"}),
+                report=Report({"test": "report"}),
                 storage=store.get_storage(experiment_id, run_id),
                 platform=get_platform_info(),
                 git=get_git_info(),
@@ -92,6 +94,7 @@ class TestLogStore:
                 worker_name=self.worker_name,
                 status=Status.FINISHED,
                 params=Params({"test": "params"}),
+                report=Report({"test": "report"}),
                 storage=store.get_storage(experiment_id, run_id),
                 platform=get_platform_info(),
                 git=get_git_info(),
@@ -131,6 +134,7 @@ class TestLogStore:
                 worker_name=self.worker_name,
                 status=Status.FINISHED,
                 params=Params({"test": "params"}),
+                report=Report({"test": "report"}),
                 storage=store.get_storage(experiment_id, run_id),
                 platform=get_platform_info(),
                 git=get_git_info(),

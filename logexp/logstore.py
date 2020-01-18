@@ -15,6 +15,7 @@ from logexp.storage import Storage
 class LogStore:
     _META_FILE = "meta.json"
     _PARAMS_FILE = "params.json"
+    _REPORT_FILE = "report.json"
     _STDOUT_FILE = "stdout.txt"
     _STDERR_FILE = "stderr.txt"
     _NOTE_FILE = "note.txt"
@@ -159,6 +160,11 @@ class LogStore:
             with open(params_path, "w") as f:
                 json.dump(params_dict, f)
 
+        report = runinfo_dict["report"]
+        if report is not None:
+            with open(run_path / self._REPORT_FILE, "w") as f:
+                json.dump(report, f)
+
         stdout = runinfo_dict["stdout"]
         if stdout is not None:
             with open(run_path / self._STDOUT_FILE, "w") as f:
@@ -210,6 +216,12 @@ class LogStore:
 
         with open(run_path / self._PARAMS_FILE, "r") as f:
             params_dict = json.load(f)
+
+        report_dict: tp.Optional[tp.Dict[str, tp.Any]] = None
+        report_path = run_path / self._REPORT_FILE
+        if report_path.exists():
+            with open(report_path, "r") as f:
+                report_dict = json.load(f)
 
         stdout: tp.Optional[str] = None
         stdout_path = run_path / self._STDOUT_FILE
@@ -268,6 +280,7 @@ class LogStore:
             "start_time": meta_dict["start_time"],
             "end_time": meta_dict["end_time"],
             "params": params_dict,
+            "report": report_dict,
             "note": note,
             "stdout": stdout,
             "stderr": stderr,

@@ -7,6 +7,7 @@ from pathlib import Path
 
 from logexp.metadata.git import GitInfo
 from logexp.params import Params
+from logexp.report import Report
 from logexp.metadata.platform import PlatformInfo
 from logexp.metadata.status import Status
 from logexp.storage import Storage
@@ -36,6 +37,7 @@ class RunInfo:
     status: Status
     params: Params
     storage: Storage
+    report: tp.Optional[Report]
     platform: PlatformInfo
     git: tp.Optional[GitInfo]
     note: tp.Optional[str]
@@ -57,6 +59,7 @@ class RunInfo:
             "status": self.status.value,
             "params": self.params.to_json(),
             "storage": self.storage.to_json(),
+            "report": self.report.to_json() if self.report else None,
             "note": self.note,
             "stdout": self.stdout,
             "stderr": self.stderr,
@@ -73,6 +76,10 @@ class RunInfo:
         if info_dict["git"] is not None:
             git_info = GitInfo.from_json(info_dict["git"])
 
+        report: tp.Optional[Report] = None
+        if info_dict["report"] is not None:
+            report = Report.from_json(info_dict["report"])
+
         runinfo = RunInfo(
             version=info_dict["version"],
             uuid=info_dict["uuid"],
@@ -85,6 +92,7 @@ class RunInfo:
             status=Status(info_dict["status"]),
             params=Params.from_json(info_dict["params"]),
             storage=Storage.from_json(info_dict["storage"]),
+            report=report,
             note=info_dict["note"],
             stdout=info_dict["stdout"],
             stderr=info_dict["stderr"],
