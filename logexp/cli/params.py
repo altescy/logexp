@@ -1,13 +1,13 @@
 import argparse
 import importlib
-import pprint
+import json
 import sys
 from pathlib import Path
 
 from logexp.cli.subcommand import Subcommand
 from logexp.experiment import Experiment
 from logexp.logstore import LogStore
-from logexp.settings import DEFAULT_LOGSTORE_DIR
+from logexp.settings import Settings
 
 
 @Subcommand.add(
@@ -24,41 +24,45 @@ class RunCommand(Subcommand):
                                   help="experiment name")
         module_group.add_argument("-w", "--worker",
                                   help="worker name")
-        module_group.add_argument("--exec-path",
-                                  help="execution path", default=".")
+        module_group.add_argument("--exec-path", type=Path,
+                                  help="execution path" )
 
         run_group = self.parser.add_argument_group("params from run")
         run_group.add_argument("-r", "--run",
                                help="run id")
-        run_group.add_argument("-s", "--store", default=DEFAULT_LOGSTORE_DIR,
+        run_group.add_argument("-s", "--store", type=Path,
                                help="path to logstore directory")
+        self.parser.add_argument("--config-file", type=Path,
+                                 help="logexp config file")
 
-    @staticmethod
-    def _check_args(args: argparse.Namespace) -> None:
-        is_module = all(
-            x is not None
-            for x in [args.module, args.experiment, args.worker]
-        )
-        is_run = all(
-            x is not None
-            for x in [args.store, args.run]
-        )
+    def run(self, args: argparse.Namespace) -> None:
+        settings = Settings()
+        if args.config_file is not None:
+            settings.load(args.config_file)
+
+        module = args.module or settings.logexp_module
+
+        # check arguments
+        is_module = all([args.experiment, args.worker, module])
+        is_run = args.run is not None
         if not (is_module or is_run):
             raise RuntimeError("some arguments are missing")
 
-    def run(self, args: argparse.Namespace) -> None:
-        self._check_args(args)
-
-        if args.module is not None:
-            sys.path.append(args.exec_path)
-            importlib.import_module(args.module)
+        if module:
+            sys.path.append(args.exec_path or str(settings.logexp_execpath))
+            importlib.import_module(module)
 
             experiment = Experiment.get_experiment(args.experiment)
             worker = experiment.get_worker(args.worker)
             params = worker.params
         else:
-            store = LogStore(Path(args.store))
+            if args.store is None:
+                store_path = settings.logstore_storepath
+            else:
+                store_path = Path(args.store)
+
+            store = LogStore(store_path)
             runinfo = store.load_run(args.run)
             params = runinfo.params
 
-        pprint.pprint(params.to_json())
+        print(json.dumps(params.to_json(), indent=2))

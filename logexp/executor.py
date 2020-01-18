@@ -26,18 +26,18 @@ class Executor:
             self,
             rootdir: tp.Union[Path, str],
             module: str,
-            execution_path: str = None,
+            execution_path: tp.Union[Path, str],
     ) -> None:
         self._store = LogStore(Path(rootdir))
         self._module = module
-        self._execution_path = Path(execution_path or os.getcwd()).absolute()
+        self._execution_path = Path(execution_path).absolute()
 
         if execution_path is not None:
-            sys.path.append(execution_path)
+            sys.path.append(str(execution_path))
         importlib.import_module(module)
 
     @staticmethod
-    def _load_params(path: str):
+    def _load_params(path: Path):
         with open(path, "r") as f:
             params_dict = json.load(f)
         return Params.from_json(params_dict)
@@ -99,7 +99,7 @@ class Executor:
             self,
             experiment_id: int,
             worker_name: str,
-            params_path: str = None,
+            params_path: Path = None,
             name: str = None,
             note: str = None,
     ) -> RunInfo:

@@ -6,7 +6,7 @@ from pathlib import Path
 from logexp.cli.subcommand import Subcommand
 from logexp.logstore import LogStore
 from logexp.metadata.runinfo import RunInfo
-from logexp.settings import DEFAULT_LOGSTORE_DIR
+from logexp.settings import Settings
 from logexp.utils.table import Table
 
 
@@ -40,7 +40,7 @@ class ListCommand(Subcommand):
                                  help="experiment id")
         self.parser.add_argument("-w", "--worker",
                                  help="worker name")
-        self.parser.add_argument("-s", "--store", default=DEFAULT_LOGSTORE_DIR,
+        self.parser.add_argument("-s", "--store", type=Path,
                                  help="path to logstore directory")
         self.parser.add_argument("-c", "--columns",
                                  help="show specified columns (comma separated string)")
@@ -51,9 +51,18 @@ class ListCommand(Subcommand):
                                 help="sort by specified column")
         sort_group.add_argument("--desc", action="store_true",
                                 help="sort by descending order")
+        self.parser.add_argument("--config-file", type=Path,
+                                 help="logexp config file")
+
 
     def run(self, args: argparse.Namespace) -> None:
-        store = LogStore(Path(args.store))
+        settings = Settings()
+        if args.config_file is not None:
+            settings.load(args.config_file)
+
+        store_path = args.store or settings.logstore_storepath
+
+        store = LogStore(store_path)
         runinfos = store.get_runs(args.experiment, args.worker)
 
         table = _get_runinfo_table(runinfos, args.max_column_width)

@@ -1,9 +1,10 @@
 import argparse
+from pathlib import Path
 
 from logexp.cli.subcommand import Subcommand
 from logexp.executor import Executor
 from logexp.metadata.runinfo import RunInfo
-from logexp.settings import DEFAULT_LOGSTORE_DIR
+from logexp.settings import Settings
 
 
 _RUNINFO_SUMMARY_TEMPLATE = """** SUMMARY **
@@ -40,29 +41,41 @@ def _print_summary(runinfo: RunInfo) -> None:
 )
 class RunCommand(Subcommand):
     def set_arguments(self):
-
-        self.parser.add_argument("-m", "--module", required=True,
-                                 help="module name")
         self.parser.add_argument("-e", "--experiment", required=True,
                                  help="experiment id")
         self.parser.add_argument("-w", "--worker", required=True,
                                  help="worker name")
-        self.parser.add_argument("-p", "--params",
+        self.parser.add_argument("-p", "--params", type=Path,
                                  help="path to params file")
         self.parser.add_argument("--name",
                                  help="name this run")
         self.parser.add_argument("--note",
                                  help="add some note about this run")
-        self.parser.add_argument("--exec-path",
-                                 help="execution path", default=".")
-        self.parser.add_argument("-s", "--store", default=DEFAULT_LOGSTORE_DIR,
+        self.parser.add_argument("-m", "--module",
+                                 help="module name")
+        self.parser.add_argument("--exec-path", type=Path,
+                                 help="execution path")
+        self.parser.add_argument("-s", "--store", type=Path,
                                  help="path to logstore directory")
+        self.parser.add_argument("--config-file", type=Path,
+                                 help="logexp config file")
 
     def run(self, args: argparse.Namespace) -> None:
+        settings = Settings()
+        if args.config_file is not None:
+            settings.load(args.config_file)
+
+        module = args.module or settings.logexp_module
+        store_path = args.store or settings.logstore_storepath
+        exec_path = args.exec_path or settings.logexp_execpath
+
+        if not module:
+            raise RuntimeError("module is required")
+
         executor = Executor(
-            rootdir=args.store,
-            module=args.module,
-            execution_path=args.exec_path,
+            rootdir=store_path,
+            module=module,
+            execution_path=exec_path,
         )
         run_info = executor.run(
             experiment_id=args.experiment,

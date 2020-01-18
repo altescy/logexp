@@ -22,7 +22,7 @@ class TestInitCommand:
 
         with tempfile.TemporaryDirectory() as tempdir:
             args = self.parser.parse_args([
-                "params", "-s", tempdir, "-m", module,
+                "params", "-m", module,
                 "-e", experiment_name, "-w", worker_name,
             ])
 
