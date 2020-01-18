@@ -13,13 +13,12 @@ from logexp.utils.table import Table
 def _get_runinfo_table(runinfos: tp.List[RunInfo], max_column_width: int) -> Table:
     columns = ["run_id", "name", "experiment", "worker", "status", "start_time", "end_time", "note"]
     runinfo_dicts = [
-            {"run_id": x.uuid, "name": x.name, "experiment": x.experiment_name,
-             "experiment": x.experiment_name,
-             "worker": x.worker_name, "status": x.status.value,
-             "start_time": x.start_time.strftime("%Y-%m-%d %H:%M:%S"),
-             "end_time": x.end_time.strftime("%Y-%m-%d %H:%M:%S"),
-             "note": x.note or ""}
-            for x in runinfos
+        {"run_id": x.uuid, "name": x.name, "experiment": x.experiment_name,
+         "worker": x.worker_name, "status": x.status.value,
+         "start_time": x.start_time.strftime("%Y-%m-%d %H:%M:%S"),
+         "end_time": x.end_time.strftime("%Y-%m-%d %H:%M:%S"),
+         "note": x.note or ""}
+        for x in runinfos
     ]
 
     table = Table(columns=columns, max_column_width=max_column_width)
@@ -65,4 +64,3 @@ class ListCommand(Subcommand):
             table = table[columns]
 
         table.print()
-

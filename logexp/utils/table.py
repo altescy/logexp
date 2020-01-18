@@ -8,7 +8,8 @@ class Table:
     def __init__(self, columns: tp.List[str], max_column_width: int = None) -> None:
         if max_column_width is not None and max_column_width < Table._MIN_MAX_COLUMN_WIDTH:
             raise ValueError(
-                f"max_column_widh must be larger than {Table._MIN_MAX_COLUMN_WIDTH}: {max_column_width}"
+                f"max_column_widh must be larger than"
+                f"{Table._MIN_MAX_COLUMN_WIDTH}: {max_column_width}"
             )
 
         self._columns = columns
@@ -72,7 +73,10 @@ class Table:
         for item in self._items:
             print(
                 " ".join(
-                    self._get_padded_column_value(self._get_column_value_str(item[col]), column_widths[col])
+                    self._get_padded_column_value(
+                        self._get_column_value_str(item[col]),
+                        column_widths[col]
+                    )
                     for col in self.columns
                 )
             )
