@@ -133,6 +133,8 @@ class Executor:
             params=params,
         )
 
+        report: tp.Optional[Report] = None
+
         try:
             with capture() as captured_out:
                 report = worker.run()
