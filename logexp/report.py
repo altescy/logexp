@@ -5,7 +5,7 @@ from logexp.utils.jsondict import JsonDict
 
 
 class Report(JsonDict):
-    """parameter dict"""
+    """worker report"""
 
     @classmethod
     def from_json(cls, params_dict: tp.Dict[str, tp.Any]) -> Report:
