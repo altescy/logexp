@@ -72,6 +72,16 @@ class LogStore:
 
         return experiment_id
 
+    def _search_run_path(self, run_id: str) -> Path:
+        run_paths = list(self._rootdir.glob(f"*/*/{run_id}"))
+        if not run_paths:
+            raise FileNotFoundError(f"run not found: {run_id}")
+        if len(run_paths) > 1:
+            raise RuntimeError("duplicate run_id")
+
+        run_path = run_paths[0]
+        return run_path
+
     def create_run(self, experiment_id: int, worker_name: str) -> str:
         self._check_experiment_exists(experiment_id)
 
@@ -192,13 +202,7 @@ class LogStore:
                     f.write(git_diff)
 
     def load_run(self, run_id: str) -> RunInfo:
-        run_paths = list(self._rootdir.glob(f"*/*/{run_id}"))
-        if not run_paths:
-            raise FileNotFoundError(f"run not found: {run_id}")
-        if len(run_paths) > 1:
-            raise RuntimeError("duplicate run_id")
-
-        run_path = run_paths[0]
+        run_path = self._search_run_path(run_id)
 
         with open(run_path / self._META_FILE, "r") as f:
             meta_dict = json.load(f)
