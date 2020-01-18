@@ -3,6 +3,7 @@ import typing as tp
 
 import json
 import re
+import shutil
 import uuid
 from pathlib import Path
 
@@ -274,6 +275,10 @@ class LogStore:
             "git": git_dict,
         }
         return RunInfo.from_json(runinfo_dict)
+
+    def delete_run(self, run_id: str) -> None:
+        run_path = self._search_run_path(run_id)
+        shutil.rmtree(run_path)
 
     def _get_run_ids(self, experiment_id: int, worker_name: str) -> tp.List[str]:
         experiment_path = self._get_experiment_path(experiment_id)

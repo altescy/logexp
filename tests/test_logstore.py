@@ -110,3 +110,43 @@ class TestLogStore:
             )
 
             assert runinfos[0].uuid == run_id
+
+    def test_delete_run(self):
+        with tempfile.TemporaryDirectory() as tempdir:
+            rootdir = Path(tempdir)
+
+            store = LogStore(rootdir)
+
+            experiment_id = store.create_experiment(self.experiment)
+            run_id = store.create_run(experiment_id, self.worker_name)
+
+            run_info = RunInfo(
+                version=VERSION,
+                uuid=run_id,
+                name="test run",
+                module="test_module",
+                execution_path=Path("test/path"),
+                experiment_id=experiment_id,
+                experiment_name=self.experiment_name,
+                worker_name=self.worker_name,
+                status=Status.FINISHED,
+                params=Params({"test": "params"}),
+                storage=store.get_storage(experiment_id, run_id),
+                platform=get_platform_info(),
+                git=get_git_info(),
+                note="test note",
+                stdout="test stdout",
+                stderr="test stderr",
+                start_time=datetime.datetime.now(),
+                end_time=datetime.datetime.now(),
+            )
+
+            store.save_run(experiment_id, run_info)
+
+            assert (rootdir / str(experiment_id) / self.worker_name / run_id).exists()
+
+            runinfos = store.delete_run(run_id)
+
+            assert not (rootdir / str(experiment_id) / self.worker_name / run_id).exists()
+
+
