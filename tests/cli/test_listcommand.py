@@ -30,7 +30,7 @@ class TestListCommand:
             )
 
             experiment_id = executor.init(experiment_name)
-            run_id = executor.run(experiment_id, worker_name)
+            runinfo = executor.run(experiment_id, worker_name)
 
             args = self.parser.parse_args([
                 "list",

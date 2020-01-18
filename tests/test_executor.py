@@ -19,4 +19,4 @@ class TestExecutor:
             )
 
             experiment_id = executor.init("my_experiment")
-            run_id = executor.run(experiment_id, "my_worker")
+            runinfo = executor.run(experiment_id, "my_worker")
