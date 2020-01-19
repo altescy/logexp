@@ -128,10 +128,6 @@ class LogStore:
     def save_run(self, experiment_id: int, runinfo: RunInfo) -> None:
         self._check_experiment_exists(experiment_id)
 
-        experiment = self.get_experiment(experiment_id)
-        if experiment.name != runinfo.experiment_name:
-            raise RuntimeError(f"experiment name not match: {runinfo.experiment_name}")
-
         experiment_path = self._get_experiment_path(experiment_id)
 
         worker_path = experiment_path / runinfo.worker_name
