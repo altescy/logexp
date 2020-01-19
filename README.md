@@ -5,6 +5,7 @@
 
 ## Quick Links
 
+- [Installation](#Installation)
 - [Tutorial](#Tutorial)
 - [scikit-learn example](https://github.com/altescy/logexp/tree/master/examples/scikit-learn)
 
@@ -21,6 +22,13 @@ You can manage your experiments and executions from command line interface.
   - **search logs**: You can search your runs with [`jq`](https://stedolan.github.io/jq/) command.
   - **written in pure Python**: `logexp` has no external dependencies.
 
+
+## Installation
+
+Installing the library is simple using `pip`.
+```
+pip install logexp
+```
 
 ## Tutorial
 
