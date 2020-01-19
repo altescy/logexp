@@ -8,8 +8,8 @@ from logexp.settings import Settings
 
 @Subcommand.add(
     name="delete",
-    description="All of run details will print to the stdout as JSON format.",
-    help_="All of run details will print to the stdout as JSON format.",
+    description="delete specified run",
+    help_="delete specified run",
 )
 class DeleteCommand(Subcommand):
     def set_arguments(self):
