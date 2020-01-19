@@ -1,11 +1,7 @@
 import argparse
-import importlib
-import json
-import sys
 from pathlib import Path
 
 from logexp.cli.subcommand import Subcommand
-from logexp.experiment import Experiment
 from logexp.logstore import LogStore
 from logexp.settings import Settings
 from logexp.utils.editor import edit
@@ -21,7 +17,7 @@ class NoteCommand(Subcommand):
         self.parser.add_argument("-r", "--run", required=True,
                                  help="run id")
         self.parser.add_argument("-s", "--store", type=Path,
-                               help="path to logstore directory")
+                                 help="path to logstore directory")
         self.parser.add_argument("--config-file", type=Path,
                                  help="logexp config file")
 
@@ -41,7 +37,7 @@ class NoteCommand(Subcommand):
         note = edit(
             editor=settings.logexp_editor,
             filename="note.txt",
-            text = runinfo.note,
+            text=runinfo.note,
         )
 
         runinfo.note = note
