@@ -3,6 +3,7 @@ from pathlib import Path
 
 from logexp.cli.subcommand import Subcommand
 from logexp.logstore import LogStore
+from logexp.metadata.status import Status
 from logexp.settings import Settings
 
 
@@ -32,7 +33,10 @@ class PruneCommand(Subcommand):
         store_path = args.store or settings.logstore_storepath
 
         store = LogStore(store_path)
-        runinfos = store.get_runs(args.experiment, args.worker)
+        runinfos = [
+            x for x in store.get_runs(args.experiment, args.worker)
+            if x.status == Status.FAILED
+        ]
 
         if args.force:
             choise = "y"
