@@ -1,7 +1,7 @@
 # logexp
 [![Actions Status](https://github.com/altescy/logexp/workflows/logexp/badge.svg)](https://github.com/altescy/logexp)
-
-
+[![pypi version](https://img.shields.io/pypi/v/logexp)](https://pypi.org/project/logexp/)
+[![license](https://img.shields.io/github/license/altescy/logexp)](https://github.com/altescy/logexp/blob/master/LICENSE)
 
 ## Quick Links
 
@@ -16,7 +16,7 @@
 You can manage your experiments and executions from command line interface.
 
 - Features
-  - **tracking experiments**: `logexp` tracks experiments and environment.
+  - **track experiments**: `logexp` tracks experiments and environment.
   - **manage parameters**: Import / export worker parameters with JSON format.
   - **capture stdout / stderr**: Capture stdout / stderr during execution automatically.
   - **search logs**: You can search your runs with [`jq`](https://stedolan.github.io/jq/) command.
@@ -32,12 +32,12 @@ pip install logexp
 
 ## Tutorial
 
-In this tutorial we'll implement a simple worker for machine learning with [`scikit-leran`](https://scikit-learn.org/).
+In this tutorial we'll implement a simple worker for machine learning with [`scikit-learn`](https://scikit-learn.org/).
 And then, let me introduce some operations to manage experiments and executions.
 
 ### 1. Create worker
 
-This worker train `RandomForestClassifier` and save trained model.
+This worker trains `RandomForestClassifier` and saves a trained model.
 
 Worker needs to inherit `logexp.BaseWorker`.
 In `config` method, you can define worker parameters, that are logged automatically.
@@ -172,7 +172,7 @@ run_id                           name exp_id exp_name     worker    status   sta
 ```
 
 `$ logexp logs` command exports all logs with JSON format.
-Using `jq` command, you can do more complex search.
+Using [`jq`](https://stedolan.github.io/jq/) command, you can do more complex search.
 
 ```
 $ logexp logs -e 0 | jq '
