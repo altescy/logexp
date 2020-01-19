@@ -16,7 +16,7 @@ class DeleteCommand(Subcommand):
         self.parser.add_argument("-r", "--run", required=True,
                                  help="run id")
         self.parser.add_argument("-f", "--force", action="store_true",
-                                 help="run id")
+                                 help="force to remove run")
         self.parser.add_argument("-s", "--store", type=Path,
                                  help="path to logstore directory")
         self.parser.add_argument("--config-file", type=Path,
