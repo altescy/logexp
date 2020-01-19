@@ -156,29 +156,29 @@ $ logexp run -m iris -e 0 -w train-rfc -p params.json
 Following command lists up executions:
 
 ```
-logexp list -e 0 --sort start_time
+$ logexp list -e 0 --sort start_time
 run_id                           name exp_id exp_name     worker    status   start_time          end_time            note
 ================================ ==== ====== ============ ========= ======== =================== =================== ====
 7fcd37ef38104715ad60bd55b7e1023d      0      sklearn-iris train-rfc finished 2020-01-19 05:14:05 2020-01-19 05:14:05
-476c6d7624c649ccb779a4fb7a9cf5ae      0      sklearn-iris train-rfc finished 2020-01-19 05:25:02 2020-01-19 05:25:02
+5300f7fc32b949bba6775c5899e09ae9      0      sklearn-iris train-rfc finished 2020-01-19 05:44:04 2020-01-19 05:44:04
 ```
 
 `$ logexp logs` command exports all logs with JSON format.
 Using `jq` command, you can do more complex search.
 
 ```
-logexp logs -e 0 | jq '
->   map(select(.status == "finished"))
->     | sort_by(.report.valid_accuracy)
->     | reverse
->     | .[]
->     | {run_id: .uuid, valid_accuracy: .report.valid_accuracy}'
+$ logexp logs -e 0 | jq '
+  map(select(.status == "finished"))
+    | sort_by(.report.valid_accuracy)
+    | reverse
+    | .[]
+    | {run_id: .uuid, valid_accuracy: .report.valid_accuracy}'
 {
   "run_id": "7fcd37ef38104715ad60bd55b7e1023d",
   "valid_accuracy": 0.9777777777777777
 }
 {
-  "run_id": "476c6d7624c649ccb779a4fb7a9cf5ae",
-  "valid_accuracy": 0.9777777777777777
+  "run_id": "5300f7fc32b949bba6775c5899e09ae9",
+  "valid_accuracy": 0.9555555555555556
 }
 ```
