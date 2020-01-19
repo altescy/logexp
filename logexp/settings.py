@@ -16,6 +16,7 @@ class Settings:
             "logexp": {
                 "module": "",
                 "execution_path": os.getcwd(),
+                "editor": "vi",
             },
             "logstore": {
                 "store_dir": f"{os.getcwd()}/.logexp",
@@ -42,6 +43,10 @@ class Settings:
     @property
     def logexp_execpath(self) -> Path:
         return Path(self._config["logexp"]["execution_path"])
+
+    @property
+    def logexp_editor(self) -> str:
+        return self._config["logexp"]["editor"]
 
     @property
     def logstore_storepath(self) -> Path:
