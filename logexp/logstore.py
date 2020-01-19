@@ -300,9 +300,6 @@ class LogStore:
             experiment_id: int = None,
             worker_name: str = None
     ) -> tp.List[RunInfo]:
-        if experiment_id is None and worker_name is not None:
-            raise RuntimeError("experiment_id is required")
-
         if experiment_id is not None:
             self._check_experiment_exists(experiment_id)
 
