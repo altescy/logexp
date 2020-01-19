@@ -42,4 +42,4 @@ class NoteCommand(Subcommand):
 
         runinfo.note = note
 
-        store.save_run(runinfo.experiment_id, runinfo)
+        store.save_run(runinfo)

@@ -125,10 +125,10 @@ class LogStore:
 
         return Storage(storage_path)
 
-    def save_run(self, experiment_id: int, runinfo: RunInfo) -> None:
-        self._check_experiment_exists(experiment_id)
+    def save_run(self, runinfo: RunInfo) -> None:
+        self._check_experiment_exists(runinfo.experiment_id)
 
-        experiment_path = self._get_experiment_path(experiment_id)
+        experiment_path = self._get_experiment_path(runinfo.experiment_id)
 
         worker_path = experiment_path / runinfo.worker_name
 

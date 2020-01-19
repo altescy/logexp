@@ -126,7 +126,7 @@ class Executor:
             note=note,
         )
 
-        self._store.save_run(experiment_id, runinfo)
+        self._store.save_run(runinfo)
 
         worker.setup(
             storage=runinfo.storage,
@@ -152,6 +152,6 @@ class Executor:
 
             runinfo.end_time = datetime.datetime.now()
 
-            self._store.save_run(experiment_id, runinfo)
+            self._store.save_run(runinfo)
 
         return runinfo

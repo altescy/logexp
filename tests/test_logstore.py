@@ -67,7 +67,7 @@ class TestLogStore:
                 end_time=datetime.datetime.now(),
             )
 
-            store.save_run(experiment_id, run_info)
+            store.save_run(run_info)
 
             run_info_ = store.load_run(run_id)
 
@@ -105,7 +105,7 @@ class TestLogStore:
                 end_time=datetime.datetime.now(),
             )
 
-            store.save_run(experiment_id, run_info)
+            store.save_run(run_info)
 
             runinfos = store.get_runs(
                 experiment_id=experiment_id,
@@ -145,7 +145,7 @@ class TestLogStore:
                 end_time=datetime.datetime.now(),
             )
 
-            store.save_run(experiment_id, run_info)
+            store.save_run(run_info)
 
             assert (rootdir / str(experiment_id) / self.worker_name / run_id).exists()
 
