@@ -1,0 +1,6 @@
+include LICENSE
+include README.md
+recursive-include logexp *
+recursive-include tests *
+recursive-include examples *
+recursive-exclude * __pycache__
