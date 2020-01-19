@@ -12,10 +12,10 @@ from logexp.settings import Settings
 
 @Subcommand.add(
     name="params",
-    description="initialize experiment",
-    help_="initialize experiment",
+    description="export params with JSON format",
+    help_="export params with JSON format",
 )
-class RunCommand(Subcommand):
+class ParamsCommand(Subcommand):
     def set_arguments(self):
         module_group = self.parser.add_argument_group("params from module")
         module_group.add_argument("-m", "--module",

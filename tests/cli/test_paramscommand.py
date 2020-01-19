@@ -6,7 +6,7 @@ from logexp.cli import Subcommand
 from logexp.executor import Executor
 
 
-class TestInitCommand:
+class TestParamsCommand:
     def setup(self):
         self.parser = argparse.ArgumentParser("test parser")
         self.subparsers = self.parser.add_subparsers()

@@ -11,7 +11,7 @@ from logexp.settings import Settings
     description="initialize experiment",
     help_="initialize experiment",
 )
-class RunCommand(Subcommand):
+class InitCommand(Subcommand):
     def set_arguments(self):
 
         self.parser.add_argument("-e", "--experiment", required=True,
