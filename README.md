@@ -1,5 +1,6 @@
 # logexp
 [![Actions Status](https://github.com/altescy/logexp/workflows/logexp/badge.svg)](https://github.com/altescy/logexp)
+[![Python version](https://img.shields.io/pypi/pyversions/logexp)](https://github.com/altescy/logexp)
 [![pypi version](https://img.shields.io/pypi/v/logexp)](https://pypi.org/project/logexp/)
 [![license](https://img.shields.io/github/license/altescy/logexp)](https://github.com/altescy/logexp/blob/master/LICENSE)
 
@@ -43,7 +44,7 @@ Worker needs to inherit `logexp.BaseWorker`.
 In `config` method, you can define worker parameters, that are logged automatically.
 Write your task in `run` method, and return `logexp.Report` which describes quick result if you need.
 
-`BaseWorker.storage` is artifact storage.
+`BaseWorker.storage` is an artifact storage.
 You can save any files by using this storage.
 
 ```
