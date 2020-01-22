@@ -43,19 +43,12 @@ class ParamsCommand(Subcommand):
         module = args.module or settings.logexp_module
 
         # check arguments
-        is_module = all([args.experiment, args.worker, module])
+        is_module = all([args.experiment is not None, args.worker, module])
         is_run = args.run is not None
         if not (is_module or is_run):
             raise RuntimeError("some arguments are missing")
 
-        if module:
-            sys.path.append(args.exec_path or str(settings.logexp_execpath))
-            importlib.import_module(module)
-
-            experiment = Experiment.get_experiment(args.experiment)
-            worker = experiment.get_worker(args.worker)
-            params = worker.params
-        else:
+        if is_run:
             if args.store is None:
                 store_path = settings.logstore_storepath
             else:
@@ -64,5 +57,12 @@ class ParamsCommand(Subcommand):
             store = LogStore(store_path)
             runinfo = store.load_run(args.run)
             params = runinfo.params
+        else:
+            sys.path.append(args.exec_path or str(settings.logexp_execpath))
+            importlib.import_module(module)
+
+            experiment = Experiment.get_experiment(args.experiment)
+            worker = experiment.get_worker(args.worker)
+            params = worker.params
 
         print(json.dumps(params.to_json(), indent=2))
