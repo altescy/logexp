@@ -11,15 +11,15 @@ from logexp.settings import Settings
 
 _RUNINFO_SUMMARY_TEMPLATE = """
 ** SUMMARY **
-  run_id     : {run_id}
-  name       : {name}
-  module     : {module}
-  experiment : {experiment}
-  worker     : {worker}
-  status     : {status}
-  artifacts  : {artifacts}
-  start_time : {start_time}
-  end_time   : {end_time}
+run_id     : {run_id}
+name       : {name}
+module     : {module}
+experiment : {experiment}
+worker     : {worker}
+status     : {status}
+artifacts  : {artifacts}
+start_time : {start_time}
+end_time   : {end_time}
 """
 
 _REPORT_TEMPLATE = """
