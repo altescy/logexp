@@ -80,7 +80,7 @@ class TrainRandomForest(logexp.BaseWorker):
 
         model = RandomForestClassifier(**self.rfc_params)
         model.fit(X_train, y_train)
-        
+
         with self.storage.open("rfc.pkl", "wb") as f:
             pickle.dump(model, f)
 
@@ -100,7 +100,7 @@ EOF
 
 ### 2. Initialize experiment
 
-Following command creates log-store directory (`./.logexp` by default) and return `experiment_id`.
+Following command creates log-store directory (`./.logexp` by default) and returns `experiment_id`.
 
 ```
 $ logexp init -m iris -e sklearn-iris
@@ -149,15 +149,15 @@ $ logexp run -m iris -e 0 -w train-rfc -p params.json
 }
 
 ** SUMMARY **
-  run_id     : 7fcd37ef38104715ad60bd55b7e1023d
-  name       :
-  module     : iris
-  experiment : sklearn-iris
-  worker     : train-rfc
-  status     : finished
-  artifacts  : {'rootdir': '/src/.logexp/0/train-rfc/7fcd37ef38104715ad60bd55b7e1023d/artifacts'}
-  start_time : 2020-01-19 05:14:05.246681
-  end_time   : 2020-01-19 05:14:05.430199
+run_id     : 7fcd37ef38104715ad60bd55b7e1023d
+name       :
+module     : iris
+experiment : sklearn-iris
+worker     : train-rfc
+status     : finished
+artifacts  : {'rootdir': '/src/.logexp/0/train-rfc/7fcd37ef38104715ad60bd55b7e1023d/artifacts'}
+start_time : 2020-01-19 05:14:05.246681
+end_time   : 2020-01-19 05:14:05.430199
 ```
 
 ### 5. View logs
