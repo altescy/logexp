@@ -106,14 +106,17 @@ class Executor:
             note: str = None,
     ) -> RunInfo:
         name = name or ""
-        run_id = self._store.create_run(experiment_id, worker_name)
 
         experiment = self._store.get_experiment(experiment_id)
         worker = experiment.get_worker(worker_name)
+
         params = (
             self._load_params(params_path)
             if params_path else worker.params
         )
+
+        # make sure that worker_name exists before create_run
+        run_id = self._store.create_run(experiment_id, worker_name)
 
         runinfo = self._build_runinfo(
             experiment_id=experiment_id,
