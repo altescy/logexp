@@ -26,6 +26,9 @@ def _get_runinfo_table(runinfos: tp.List[RunInfo], max_column_width: int) -> Tab
     table = Table(columns=columns, max_column_width=max_column_width)
     for item in runinfo_dicts:
         table.add(item)
+
+    table.sort("start_time")
+
     return table
 
 
@@ -53,7 +56,6 @@ class ListCommand(Subcommand):
                                 help="sort by descending order")
         self.parser.add_argument("--config-file", type=Path,
                                  help="logexp config file")
-
 
     def run(self, args: argparse.Namespace) -> None:
         settings = Settings()
