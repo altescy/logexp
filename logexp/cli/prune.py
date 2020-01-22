@@ -9,8 +9,8 @@ from logexp.settings import Settings
 
 @Subcommand.add(
     name="prune",
-    description="delete all failed runs",
-    help_="delete all failed runs",
+    description="delete all failed and interrupted runs",
+    help_="delete all failed and interrupted runs",
 )
 class PruneCommand(Subcommand):
     def set_arguments(self):
@@ -35,7 +35,7 @@ class PruneCommand(Subcommand):
         store = LogStore(store_path)
         runinfos = [
             x for x in store.get_runs(args.experiment, args.worker)
-            if x.status == Status.FAILED
+            if x.status == Status.FAILED or x.status == Status.INTERRUPTED
         ]
 
         if args.force:

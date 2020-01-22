@@ -42,10 +42,32 @@ class TestPruneCommand:
             experiment_id = store.create_experiment(self.experiment)
             run_id = store.create_run(experiment_id, self.worker_name)
 
-            runinfo = RunInfo(
+            runinfo_interrupted = RunInfo(
                 version=VERSION,
                 uuid=run_id,
-                name="test run",
+                name="interrupted run",
+                module="test_module",
+                execution_path=Path("test/path"),
+                experiment_id=experiment_id,
+                experiment_name=self.experiment_name,
+                worker_name=self.worker_name,
+                status=Status.INTERRUPTED,
+                params=Params({"test": "params"}),
+                report=Report({"test": "report"}),
+                storage=store.get_storage(experiment_id, run_id),
+                platform=get_platform_info(),
+                git=get_git_info(),
+                note="interrupted",
+                stdout="test stdout",
+                stderr="test stderr",
+                start_time=datetime.datetime.now(),
+                end_time=datetime.datetime.now(),
+            )
+
+            runinfo_failed = RunInfo(
+                version=VERSION,
+                uuid=run_id,
+                name="failed run",
                 module="test_module",
                 execution_path=Path("test/path"),
                 experiment_id=experiment_id,
@@ -57,17 +79,20 @@ class TestPruneCommand:
                 storage=store.get_storage(experiment_id, run_id),
                 platform=get_platform_info(),
                 git=get_git_info(),
-                note="test note",
+                note="failed",
                 stdout="test stdout",
                 stderr="test stderr",
                 start_time=datetime.datetime.now(),
                 end_time=datetime.datetime.now(),
             )
 
-            store.save_run(runinfo)
+            store.save_run(runinfo_interrupted)
+            store.save_run(runinfo_failed)
 
-            run_path = rootdir / str(experiment_id) / self.worker_name / runinfo.uuid
-            assert run_path.exists()
+            interrupted_run_path = rootdir / str(experiment_id) / self.worker_name / runinfo_interrupted.uuid
+            failed_run_path = rootdir / str(experiment_id) / self.worker_name / runinfo_failed.uuid
+            assert interrupted_run_path.exists()
+            assert failed_run_path.exists()
 
             args = self.parser.parse_args([
                 "prune", "-s", tempdir, "-f",
@@ -75,4 +100,5 @@ class TestPruneCommand:
 
             args.func(args)
 
-            assert not run_path.exists()
+            assert not interrupted_run_path.exists()
+            assert not failed_run_path.exists()
