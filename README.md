@@ -1,5 +1,5 @@
 # logexp
-[![Actions Status](https://github.com/altescy/logexp/workflows/logexp/badge.svg)](https://github.com/altescy/logexp)
+[![Actions Status](https://github.com/altescy/logexp/workflows/build/badge.svg)](https://github.com/altescy/logexp)
 [![Python version](https://img.shields.io/pypi/pyversions/logexp)](https://github.com/altescy/logexp)
 [![pypi version](https://img.shields.io/pypi/v/logexp)](https://pypi.org/project/logexp/)
 [![license](https://img.shields.io/github/license/altescy/logexp)](https://github.com/altescy/logexp/blob/master/LICENSE)

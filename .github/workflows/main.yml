@@ -1,4 +1,4 @@
-name: logexp
+name: build
 
 on: [push]
 
