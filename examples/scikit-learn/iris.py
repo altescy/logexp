@@ -1,22 +1,49 @@
-import logexp
+import typing as tp
+import importlib
 
+import colt
+import logexp
+import sklearn
 from sklearn.datasets import load_iris
-from sklearn.svm import SVC
 from sklearn.model_selection import train_test_split
 
 from logger import create_logger
 
 
 logger = create_logger(__name__)
-
-
 ex = logexp.Experiment("sklearn-iris")
 
 
-@ex.worker("train-svc")
-class TrainSVC(logexp.BaseWorker):
+@colt.register("sklearn-model")
+class SklearnModelBuilder:
+    def __init__(self, **kwargs) -> None:
+        model_path = kwargs.pop("@model")
+        self._model = self._get_model_from_sklearn(model_path)
+        self._params = kwargs
+
+    def get_model(self):
+        return self._model(**self._params)
+
+    @staticmethod
+    def _get_model_from_sklearn(model_path: str) -> tp.Any:
+        model_path = "sklearn." + model_path
+        module_path, model_name = model_path.rsplit(".", 1)
+
+        module = importlib.import_module(module_path)
+        model = getattr(module, model_name)
+
+        if isinstance(model, sklearn.base.BaseEstimator):
+            raise ValueError(f"{model_path} is not an estimator.")
+
+        return model
+
+
+@ex.worker("sklearn-trainer")
+class TrainSklearnModel(logexp.BaseWorker):
     def config(self):
-        self.svc_params = {
+        self.model = {
+            "@type": "sklearn-model",
+            "@model": "svm.SVC",
             "C": 1.0,
             "kernel": "rbf",
         }
@@ -33,7 +60,7 @@ class TrainSVC(logexp.BaseWorker):
 
         logger.info(f"dataset size: train={len(X_train)}, valid={len(X_valid)}")
 
-        model = SVC(**self.svc_params)
+        model = colt.build(self.model).get_model()
 
         logger.info("start training")
 

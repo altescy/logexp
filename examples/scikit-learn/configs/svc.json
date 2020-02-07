@@ -1,0 +1,9 @@
+{
+  "model": {
+    "@type": "sklearn-model",
+    "@model": "svm.SVC",
+    "C": 1.0,
+    "kernel": "rbf"
+  },
+  "test_size": 0.3
+}
