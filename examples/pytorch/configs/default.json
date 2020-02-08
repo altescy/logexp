@@ -1,0 +1,12 @@
+{
+  "data_directory": "./data",
+  "batch_size": 64,
+  "test_batch_size": 1000,
+  "sgd_optimizer": {
+    "lr": 0.01,
+    "momentum": 0.5
+  },
+  "epochs": 10,
+  "cuda": false,
+  "log_interval": 100
+}
