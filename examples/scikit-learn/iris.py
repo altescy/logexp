@@ -1,9 +1,10 @@
 import typing as tp
+import copy
 import importlib
 
 import colt
 import logexp
-import sklearn
+from sklearn.base import BaseEstimator
 from sklearn.datasets import load_iris
 from sklearn.model_selection import train_test_split
 
@@ -13,29 +14,22 @@ from logger import create_logger
 logger = create_logger(__name__)
 ex = logexp.Experiment("sklearn-iris")
 
-
-@colt.register("sklearn-model")
-class SklearnModelBuilder:
-    def __init__(self, **kwargs) -> None:
-        model_path = kwargs.pop("@model")
-        self._model = self._get_model_from_sklearn(model_path)
-        self._params = kwargs
-
-    def get_model(self):
-        return self._model(**self._params)
-
-    @staticmethod
-    def _get_model_from_sklearn(model_path: str) -> tp.Any:
+@colt.register("sklearn-model", constructor="from_dict")
+class SklearnModelWrapper:
+    @classmethod
+    def from_dict(cls, model_dict: tp.Dict[str, tp.Any]) -> BaseEstimator:
+        model_path = model_dict.pop("@model")
         model_path = "sklearn." + model_path
+
         module_path, model_name = model_path.rsplit(".", 1)
 
         module = importlib.import_module(module_path)
-        model = getattr(module, model_name)
+        model_cls = getattr(module, model_name)
 
-        if isinstance(model, sklearn.base.BaseEstimator):
-            raise ValueError(f"{model_path} is not an estimator.")
+        if not issubclass(model_cls, BaseEstimator):
+            raise ValueError(f"{model_path} is not an estimator")
 
-        return model
+        return model_cls(**model_dict)
 
 
 @ex.worker("sklearn-trainer")
@@ -52,6 +46,8 @@ class TrainSklearnModel(logexp.BaseWorker):
     def run(self):
         logger.info("load iris dataset")
 
+        model = colt.build(self.model)
+
         iris = load_iris()
         X, y = iris.data, iris.target
 
@@ -59,8 +55,6 @@ class TrainSklearnModel(logexp.BaseWorker):
             train_test_split(X, y, test_size=self.test_size)
 
         logger.info(f"dataset size: train={len(X_train)}, valid={len(X_valid)}")
-
-        model = colt.build(self.model).get_model()
 
         logger.info("start training")
 
