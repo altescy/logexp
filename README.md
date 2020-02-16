@@ -9,7 +9,7 @@
 - [Installation](#Installation)
 - [Tutorial](#Tutorial)
 - [scikit-learn example](https://github.com/altescy/logexp/tree/master/examples/scikit-learn)
-
+- [PyTorch example](https://github.com/altescy/logexp/tree/master/examples/pytorch)
 
 ## Introduction
 
