@@ -2,12 +2,12 @@ from __future__ import annotations
 import typing as tp
 
 import datetime
-import importlib
 import json
 import sys
 from pathlib import Path
 
 from logexp.utils.capture import capture
+from logexp.utils.submodule import import_submodules
 from logexp import error
 from logexp.experiment import Experiment
 from logexp.logstore import LogStore
@@ -34,7 +34,7 @@ class Executor:
 
         if execution_path is not None:
             sys.path.append(str(execution_path))
-        importlib.import_module(module)
+        import_submodules(module)
 
     @staticmethod
     def _load_params(path: Path):
