@@ -1,5 +1,4 @@
 import argparse
-import importlib
 import json
 import sys
 from pathlib import Path
@@ -8,6 +7,7 @@ from logexp.cli.subcommand import Subcommand
 from logexp.experiment import Experiment
 from logexp.logstore import LogStore
 from logexp.settings import Settings
+from logexp.utils.submodule import import_submodules
 
 
 @Subcommand.add(
@@ -59,7 +59,7 @@ class ParamsCommand(Subcommand):
             params = runinfo.params
         else:
             sys.path.append(args.exec_path or str(settings.logexp_execpath))
-            importlib.import_module(module)
+            import_submodules(module)
 
             experiment = Experiment.get_experiment(args.experiment)
             worker = experiment.get_worker(args.worker)
