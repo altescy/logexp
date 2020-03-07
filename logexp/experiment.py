@@ -19,7 +19,9 @@ class Experiment:
         experiment = Experiment._experiments[cls].get(name)
 
         if experiment is None:
-            raise error.ExperimentNotFoundError
+            raise error.ExperimentNotFoundError(
+                f"available experiments: {list(Experiment._experiments[cls])}"
+            )
 
         return experiment
 
@@ -48,7 +50,9 @@ class Experiment:
 
     def get_worker(self, name: str) -> BaseWorker:
         if name not in self._workers:
-            raise error.WorkerNotFoundError
+            raise error.WorkerNotFoundError(
+                f"available workers: {list(self._workers)}"
+            )
         return self._workers[name](name)
 
     @property
