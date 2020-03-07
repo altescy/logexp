@@ -72,8 +72,7 @@ class TrainRandomForest(logexp.BaseWorker):
     def run(self):
         np.random.seed(self.random_seed)
 
-        iris = load_iris()
-        X, y = iris.data, iris.target
+        X, y = load_iris(return_X_y=True)
 
         X_train, X_valid, y_train, y_valid = \
             train_test_split(X, y, test_size=self.test_size)
