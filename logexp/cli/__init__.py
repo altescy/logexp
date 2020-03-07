@@ -9,7 +9,7 @@ from logexp.cli import (
 
 
 def main():
-    parser = argparse.ArgumentParser("logexp: simple logging tool for machine learning")
+    parser = argparse.ArgumentParser("logexp")
     parser.add_argument("--version", action="store_true")
 
     subparsers = parser.add_subparsers()
