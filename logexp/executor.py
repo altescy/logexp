@@ -110,10 +110,8 @@ class Executor:
         experiment = self._store.get_experiment(experiment_id)
         worker = experiment.get_worker(worker_name)
 
-        params = (
-            self._load_params(params_path)
-            if params_path else worker.params
-        )
+        params = (self._load_params(params_path)
+                  if params_path else worker.params)
 
         # make sure that worker_name exists before create_run
         run_id = self._store.create_run(experiment_id, worker_name)
@@ -131,19 +129,18 @@ class Executor:
 
         self._store.save_run(runinfo)
 
-        worker.setup(
-            storage=runinfo.storage,
-            params=params,
-        )
-
         report: tp.Optional[Report] = None
 
         try:
             with capture() as captured_out:
-                report = worker.run()
+                report = worker(
+                    params=params,
+                    storage=runinfo.storage,
+                )
+
         except KeyboardInterrupt:
             runinfo.status = Status.INTERRUPTED
-        except Exception as e: # pylint: disable=broad-except
+        except Exception as e:  # pylint: disable=broad-except
             runinfo.status = Status.FAILED
             raise e
         else:

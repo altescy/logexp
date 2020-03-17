@@ -33,7 +33,7 @@ class BaseWorker:
 
     @property
     def within_config_scope(self) -> bool:
-        return getattr(self, "_within_config_scope", False) # type:ignore
+        return getattr(self, "_within_config_scope", False)  # type:ignore
 
     @contextlib.contextmanager
     def config_scope(self) -> tp.Iterator[tp.Any]:
@@ -44,19 +44,6 @@ class BaseWorker:
             yield
         finally:
             self._within_config_scope = old_flag
-
-    def setup(
-            self,
-            storage: Storage = None,
-            params: Params = None,
-    ) -> None:
-        if storage is not None:
-            self._storage = storage
-
-        if params is not None:
-            with self.config_scope():
-                for key, value in params.items():
-                    setattr(self, key, value)
 
     @property
     def params(self) -> Params:
@@ -71,6 +58,19 @@ class BaseWorker:
         if self._storage is None:
             raise RuntimeError("storage is not set")
         return self._storage
+
+    def __call__(self,
+                 params: Params = None,
+                 storage: Storage = None) -> tp.Optional[Report]:
+        if params is not None:
+            with self.config_scope():
+                for key, value in params.items():
+                    setattr(self, key, value)
+
+        if storage is not None:
+            self._storage = storage
+
+        return self.run()
 
     def config(self):
         """define worker parameters"""
