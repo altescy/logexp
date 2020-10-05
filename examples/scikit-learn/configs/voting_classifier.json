@@ -1,10 +1,9 @@
 {
     "model": {
-        "@type": "sklearn-model",
-        "@model": "ensemble.VotingClassifier",
+        "@type": "sklearn.ensemble.VotingClassifier",
         "estimators": [
-            ["rfc", {"@type": "sklearn-model", "@model": "ensemble.RandomForestClassifier", "n_estimators": 10}],
-            ["svc", {"@type": "sklearn-model", "@model": "svm.SVC", "gamma": "scale"}]
+            ["rfc", {"@type": "sklearn.ensemble.RandomForestClassifier", "n_estimators": 10}],
+            ["svc", {"@type": "sklearn.svm.SVC", "gamma": "scale"}]
         ]
     }
 }

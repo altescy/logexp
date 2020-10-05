@@ -1,7 +1,6 @@
 {
   "model": {
-    "@type": "sklearn-model",
-    "@model": "svm.SVC",
+    "@type": "sklearn.svm.SVC",
     "C": 1.0,
     "kernel": "rbf"
   },
